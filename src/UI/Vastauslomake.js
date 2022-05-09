@@ -12,8 +12,17 @@ export default function Vastauslomake(props) {
     const [kysely, setKysely] = useState(props.kysely)
     const [open, setOpen] = useState(false)
 
-    // post pyyntö 
-   const vastaa = (kysely) => {
+  
+
+// näytetään kyselyn kysymykset
+const kyselynKysymykset = () =>{
+    setKysymykset(kysely.kysymykset)
+    setOpen(true)
+}
+
+//Tehdään POST-pyyntö jotta vaastaukset tallennetaan json-muodossa
+//haluttuun osoitteeseen
+   const vastaaKyselyyn = (kysely) => {
         
         const postOptions = {
             method: 'POST',
@@ -29,23 +38,15 @@ export default function Vastauslomake(props) {
         setVastaukset([])
         setKysely(kysely)
     }
-//___________________________________________________
 
-    // Näytetään kyselyn kysymykset
-    const vastaaKysymyksiin = () => {
-        setKysymykset(kysely.kysymykset)
-        setOpen(true)
-    }
-//___________________________________________________
-
-    //Asetetaan vastaukset kyselylle objektilistaksi 
-    
+//Asetetaan vastaukset kyselylle objektilistaksi   
     const tallennaVastaukset = () => {
         const Vastaukset = Object.entries(vastaukset).map(([id, vastaus]) => ({id,vastaus}));
         setKysely(kysely.vastaukset =  Vastaukset)
-        vastaa(kysely) 
+        vastaaKyselyyn(kysely) 
         setOpen(false)                 
     }
+
 
     // mahdollistaa valinnat (aktiiviset toiminnot esim. tekstinsyötön lomakkeeseen ja vastausvalinnat sekä kyselyn avaamisen)
     const tekstinSyotto = (e, kysymysid) => {
@@ -64,7 +65,7 @@ export default function Vastauslomake(props) {
  
     return (
         <Box>
-            <Button color='primary' endIcon={<QuestionAnswerIcon/>} onClick={()=>vastaaKysymyksiin()}>Vastaa Kyselyyn {kysely.nimi} </Button>
+            <Button color='primary' endIcon={<QuestionAnswerIcon/>} onClick={()=>kyselynKysymykset()}>Vastaa Kyselyyn {kysely.nimi} </Button>
 
             <Dialog open={open} onClose={keskeytaKysely}  >
 
@@ -76,9 +77,15 @@ export default function Vastauslomake(props) {
                 
                 {/*huom ilman tekstinSyotto={tekstinSyotto} vastausta ei voida lähtettää tallennettavaksi  */}
                 {kysymykset.map((kysymys, i) => {
-        
+
+               switch (kysymys.vastaustyyppi){
+                case 'teksti':
                             return( <Teksti key={i} kysymys={kysymys} tekstinSyotto={tekstinSyotto}/> )                    
-                    })}
+                
+                            default:
+                                console.log(`Jonkun kysymyksen tyyppiä ei voitu lukea `)
+                                return(<div></div>);
+}})}
            
             <Box sx={{ '& button': { m: 1.5 }, justifyContent: 'center' } }>
             <Button color="primary" onClick={tallennaVastaukset} sx={{marginBottom: 0.4}} variant="contained"  >Lähetä vastaus</Button>

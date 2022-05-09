@@ -9,7 +9,7 @@ export default function Teksti(props){
                 <TextField
                 required = {kysymys.pakollinen ===true}             
                 label={kysymys.kysymysteksti}
-                onChange={e => props.muutaVastaus(e, kysymys.id)}
+                onChange={e => props.tekstinSyotto(e, kysymys.id)}
                 fullWidth
                 multiline
                 margin= 'dense'
