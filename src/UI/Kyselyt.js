@@ -10,9 +10,11 @@ export default function Kyselyt() {
     const [kyselyt, setKyselyt] = useState([]);
 
     useEffect(() => fetchData(), []);
-    const url = 'http://localhost:8080/api/kyselyt'    
+    const url = 'http://localhost:8080/api/kyselyt' 
+    
+    
 
-    // haetaan kaikki kyselyt
+// haetaan kaikki kyselyt -------------------
     const fetchData = () => {
         fetch(url) 
         .then(response => response.json())
@@ -23,19 +25,21 @@ export default function Kyselyt() {
         .catch(err=>console.log(err));  
     }
 
-    const Item = styled(Paper)(({ theme }) => ({
-           
+
+
+ // ------Esitetään kyselyt----------------------------------------------------   
+
+    const Item = styled(Paper)(({ theme }) => ({          
         textAlign: 'center',
-        padding: theme.spacing(6)
+        padding: theme.spacing(7),
       }));
    
     return (
-        <div>
-            
-            <Grid containercolumnSpacing={{ xs: 1, sm: 2, md: 3 }} rowSpacing={2} >
+        <div>          
+            <Grid rowSpacing={10} >
              {kyselyt.map((kysely,i) => {
                 return (
-                    <Grid item xs={15}  key={i}>
+                    <Grid item key={i}>
                     <Item>                   
                    {/* Kyselyn kysymyksen api propsina vastauslomakkeelle */}
                     <Vastauslomake kysely={kysely}  />             
